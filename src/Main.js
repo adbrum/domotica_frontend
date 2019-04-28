@@ -1,15 +1,14 @@
 import React from 'react'
-import './styles.css'
 import Header from './components/Header'
 import Home from './components/Home'
 
-const App = () => {
+const Main = ({ topic }) => {
 	return (
 		<div>
 			<Header />
-			<Home />
+			<Home topic={topic} />
 		</div>
 	)
 }
 
-export default App
+export default Main
