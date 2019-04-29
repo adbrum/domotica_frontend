@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import lampadaOn from './../img/lampada-on.jpg'
+import store01 from './../img/estore_01.jpg'
 import lampadaOff from './../img/lampada-off.jpg'
 import store02 from './../img/estore_02.jpg'
 import axios from 'axios'
@@ -8,34 +10,96 @@ class Lighting extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			state: '',
+			state: 0,
 			place: '',
-			livingroom: false,
-			room: false,
-			kitchen: false,
+			state_livingroom: 0,
+			state_room: 0,
+			state_kitchen: 0,
+			livingroom: lampadaOff,
+			room: lampadaOff,
+			kitchen: lampadaOff,
 			Outdoor: false,
 			Garage: false,
 			General: false
 		}
 	}
 
-	componentDidMount = () => {
-		console.log(this.state.place)
-	}
-
-	handleSubmit = async (event, place) => {
+	handleSubmit = async (event, place, state) => {
+		//console.log('state: ', state)
 		event.preventDefault()
-		console.log('PLACE: ', place)
-		this.setState({
-			state: 'true',
+
+		//const value = this.state.state ? 0 : 1
+		/*this.setState({
+			state: value,
 			place: place
+		})*/
+
+		if (place === 'sala') {
+			const state_livingroom = this.state.state_livingroom ? 0 : 1
+			if (state_livingroom === 1) {
+				this.setState({ livingroom: lampadaOn, state_livingroom })
+			} else {
+				this.setState({ livingroom: lampadaOff, state_livingroom })
+			}
+			this.setState({ state: state_livingroom })
+		}
+		if (place === 'quarto') {
+			const state_room = this.state.state_room ? 0 : 1
+			if (state_room === 1) {
+				this.setState({ room: lampadaOn, state_room })
+			} else {
+				this.setState({ room: lampadaOff, state_room })
+			}
+			this.setState({ state: state_room })
+		}
+		if (place === 'cozinha') {
+			const state_kitchen = this.state.state_kitchen ? 0 : 1
+			if (state_kitchen === 1) {
+				this.setState({ kitchen: lampadaOn, state_kitchen })
+			} else {
+				this.setState({ kitchen: lampadaOff, state_kitchen })
+			}
+			this.setState({ state: state_kitchen })
+		}
+
+		console.log('PLACE: ', place)
+		//console.log('VALUE: ', value)
+		console.log('STATE: ', this.state.state)
+
+		axios({
+			url: 'http://192.168.1.18:3000/',
+			method: 'get',
+			params: {
+				state: this.state.state,
+				place: place
+			}
 		})
-		await axios
-			.get('http://192.168.1.14:8000/cliente/?state=' + this.state.state + '&place=' + place)
+			.then((res) => {
+				console.log(res)
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+
+		/*axios
+			.post('http://192.168.1.14:3000', {
+				data: {
+					state: true,
+					place: place
+				}
+			})
+			.then((res) => {
+				console.log(res)
+			})
+			.catch((error) => {
+				console.log(error)
+			})*/
+		/*await axios
+			.get('http://192.168.1.14:3000/cliente/?state=' + this.state.state + '&place=' + place)
 			.then((res) => {
 				//console.log(res)
 				//console.log(res.data)
-			})
+			})*/
 	}
 
 	render() {
@@ -69,12 +133,17 @@ class Lighting extends Component {
 							<div className="row">
 								<div className="col-md-4" align="center">
 									<div>
-										<img className="img" id="light_state" src={lampadaOff} alt="iluninacao" />
+										<img
+											className="img"
+											id="light_state"
+											src={this.state.livingroom}
+											alt="iluninacao"
+										/>
 									</div>
 									<div>
 										<button
 											onClick={(e) => {
-												this.handleSubmit(e, 'sala')
+												this.handleSubmit(e, 'sala', 1)
 											}}
 											type="button"
 											id="btn_on"
@@ -122,7 +191,12 @@ class Lighting extends Component {
 							<div className="row">
 								<div className="col-md-4" align="center">
 									<div>
-										<img className="img" id="light_state_01" src={lampadaOff} alt="iluninacao" />
+										<img
+											className="img"
+											id="light_state_01"
+											src={this.state.room}
+											alt="iluninacao"
+										/>
 									</div>
 									<div>
 										<button
@@ -175,7 +249,12 @@ class Lighting extends Component {
 							<div className="row">
 								<div className="col-md-4" align="center">
 									<div>
-										<img className="img" id="light_state_02" src={lampadaOff} alt="iluninacao" />
+										<img
+											className="img"
+											id="light_state_02"
+											src={this.state.kitchen}
+											alt="iluninacao"
+										/>
 									</div>
 									<div>
 										<button
