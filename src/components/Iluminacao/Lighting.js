@@ -18,21 +18,17 @@ class Lighting extends Component {
 			livingroom: lampadaOff,
 			room: lampadaOff,
 			kitchen: lampadaOff,
-			Outdoor: false,
-			Garage: false,
-			General: false
+			store_livingroom: 0,
+			store_room: 0,
+			store_kitchen: 0,
+			Outdoor: 0,
+			Garage: 0,
+			General: 0
 		}
 	}
 
 	handleSubmit = async (event, place, state) => {
-		//console.log('state: ', state)
 		event.preventDefault()
-
-		//const value = this.state.state ? 0 : 1
-		/*this.setState({
-			state: value,
-			place: place
-		})*/
 
 		if (place === 'sala') {
 			const state_livingroom = this.state.state_livingroom ? 0 : 1
@@ -61,10 +57,31 @@ class Lighting extends Component {
 			}
 			this.setState({ state: state_kitchen })
 		}
+		if (place === 'store_livingroom') {
+			if (state === 1) {
+				this.setState({ store_livingroom: 1 })
+			} else {
+				this.setState({ store_livingroom: 0 })
+			}
+		}
+		if (place === 'store_room') {
+			if (state === 1) {
+				this.setState({ store_room: 1 })
+			} else {
+				this.setState({ store_room: 0 })
+			}
+		}
+		if (place === 'store_kitchen') {
+			if (state === 1) {
+				this.setState({ store_kitchen: 1 })
+			} else {
+				this.setState({ store_kitchen: 0 })
+			}
+		}
 
 		console.log('PLACE: ', place)
-		//console.log('VALUE: ', value)
-		console.log('STATE: ', this.state.state)
+		console.log('STATE: ', state)
+		console.log('STATE.STATE: ', this.state.state)
 
 		axios({
 			url: 'http://192.168.1.18:3000/',
@@ -80,26 +97,6 @@ class Lighting extends Component {
 			.catch((error) => {
 				console.log(error)
 			})
-
-		/*axios
-			.post('http://192.168.1.14:3000', {
-				data: {
-					state: true,
-					place: place
-				}
-			})
-			.then((res) => {
-				console.log(res)
-			})
-			.catch((error) => {
-				console.log(error)
-			})*/
-		/*await axios
-			.get('http://192.168.1.14:3000/cliente/?state=' + this.state.state + '&place=' + place)
-			.then((res) => {
-				//console.log(res)
-				//console.log(res.data)
-			})*/
 	}
 
 	render() {
@@ -161,7 +158,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'sala_store')
+													this.handleSubmit(e, 'store_livingroom', 1)
 												}}
 												type="button"
 												id="opacity"
@@ -172,7 +169,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'sala_store')
+													this.handleSubmit(e, 'store_livingroom', 0)
 												}}
 												type="button"
 												id="opacity2"
@@ -219,7 +216,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'quarto_store')
+													this.handleSubmit(e, 'store_room', 1)
 												}}
 												type="button"
 												id="opacity3"
@@ -230,7 +227,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'quarto_store')
+													this.handleSubmit(e, 'store_room', 0)
 												}}
 												type="button"
 												id="opacity4"
@@ -277,7 +274,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'cozinha_store')
+													this.handleSubmit(e, 'store_kitchen', 1)
 												}}
 												type="button"
 												id="opacity5"
@@ -288,7 +285,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'cozinha_store')
+													this.handleSubmit(e, 'store_kitchen', 0)
 												}}
 												type="button"
 												id="opacity6"
