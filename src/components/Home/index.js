@@ -9,13 +9,13 @@ import Configuracoes from '../Configuracoes/index'
 
 import './styles.css'
 
-const Home = ({ mqtt }) => {
+const Home = (props) => {
 	return (
 		<div className="container-fluid">
 			<div className="col-md-12">
 				<div className="row">
 					<div className="col-md-4">
-						<Iluminacao mqtt={mqtt} />
+						<Iluminacao />
 					</div>
 					<div className="col-md-4">
 						<Portas />

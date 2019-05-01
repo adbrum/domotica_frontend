@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import lampadaOn from './../img/lampada-on.jpg'
-import store01 from './../img/estore_01.jpg'
+//import blind01 from './../img/estore_01.jpg'
 import lampadaOff from './../img/lampada-off.jpg'
-import store02 from './../img/estore_02.jpg'
+import blind02 from './../img/estore_02.jpg'
 import axios from 'axios'
 import './styles.css'
 
@@ -10,7 +10,8 @@ class Lighting extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			state: 0,
+			_state: 0,
+			state_blind: 0,
 			place: '',
 			state_livingroom: 0,
 			state_room: 0,
@@ -18,9 +19,9 @@ class Lighting extends Component {
 			livingroom: lampadaOff,
 			room: lampadaOff,
 			kitchen: lampadaOff,
-			store_livingroom: 0,
-			store_room: 0,
-			store_kitchen: 0,
+			blind_livingroom: 0,
+			blind_room: 0,
+			blind_kitchen: 0,
 			Outdoor: 0,
 			Garage: 0,
 			General: 0
@@ -29,6 +30,7 @@ class Lighting extends Component {
 
 	handleSubmit = async (event, place, state) => {
 		event.preventDefault()
+		//console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX: ', this.state._state)
 
 		if (place === 'sala') {
 			const state_livingroom = this.state.state_livingroom ? 0 : 1
@@ -37,7 +39,7 @@ class Lighting extends Component {
 			} else {
 				this.setState({ livingroom: lampadaOff, state_livingroom })
 			}
-			this.setState({ state: state_livingroom })
+			this.setState({ _state: state_livingroom })
 		}
 		if (place === 'quarto') {
 			const state_room = this.state.state_room ? 0 : 1
@@ -46,7 +48,7 @@ class Lighting extends Component {
 			} else {
 				this.setState({ room: lampadaOff, state_room })
 			}
-			this.setState({ state: state_room })
+			this.setState({ _state: state_room })
 		}
 		if (place === 'cozinha') {
 			const state_kitchen = this.state.state_kitchen ? 0 : 1
@@ -55,39 +57,64 @@ class Lighting extends Component {
 			} else {
 				this.setState({ kitchen: lampadaOff, state_kitchen })
 			}
-			this.setState({ state: state_kitchen })
-		}
-		if (place === 'store_livingroom') {
-			if (state === 1) {
-				this.setState({ store_livingroom: 1 })
-			} else {
-				this.setState({ store_livingroom: 0 })
-			}
-		}
-		if (place === 'store_room') {
-			if (state === 1) {
-				this.setState({ store_room: 1 })
-			} else {
-				this.setState({ store_room: 0 })
-			}
-		}
-		if (place === 'store_kitchen') {
-			if (state === 1) {
-				this.setState({ store_kitchen: 1 })
-			} else {
-				this.setState({ store_kitchen: 0 })
-			}
+			this.setState({ _state: state_kitchen })
 		}
 
-		console.log('PLACE: ', place)
-		console.log('STATE: ', state)
-		console.log('STATE.STATE: ', this.state.state)
+		//console.log('PLACE: ', place)
+		//console.log('STATE: ', state)
+		//console.log('STATE.STATE: ', this.state._state)
 
 		axios({
-			url: 'http://192.168.1.18:3000/',
+			url: 'http://192.168.1.15:3000/',
 			method: 'get',
 			params: {
-				state: this.state.state,
+				state: this.state._state,
+				place: place
+			}
+		})
+			.then((res) => {
+				console.log(res)
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}
+
+	handleSubmitBlind = async (event, place, state) => {
+		event.preventDefault()
+		//console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX: ', state)
+
+		if (place === 'blind_livingroom') {
+			if (state === 1) {
+				this.setState({ blind_livingroom: 1 })
+			} else {
+				this.setState({ blind_livingroom: 0 })
+			}
+		}
+		if (place === 'blind_room') {
+			if (state === 1) {
+				this.setState({ blind_room: 1 })
+			} else {
+				this.setState({ blind_room: 0 })
+			}
+		}
+		if (place === 'blind_kitchen') {
+			if (state === 1) {
+				this.setState({ blind_kitchen: 1 })
+			} else {
+				this.setState({ blind_kitchen: 0 })
+			}
+		}
+		this.setState({ state_blind: state })
+
+		//console.log('PLACE_BLIND: ', place)
+		//console.log('STATE_STATE: ', state)
+
+		axios({
+			url: 'http://192.168.1.15:3000/blind',
+			method: 'get',
+			params: {
+				state_blind: state,
 				place: place
 			}
 		})
@@ -151,14 +178,14 @@ class Lighting extends Component {
 									</div>
 								</div>
 								<div className="col-md-6" align="center">
-									<div id="estore_state">
-										<img src={store02} alt="store02" styles="height: 220px" />
+									<div id="eblind_state">
+										<img src={blind02} alt="blind02" styles="height: 220px" />
 									</div>
 									<div className="row">
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'store_livingroom', 1)
+													this.handleSubmitBlind(e, 'blind_livingroom', 1)
 												}}
 												type="button"
 												id="opacity"
@@ -169,7 +196,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'store_livingroom', 0)
+													this.handleSubmitBlind(e, 'blind_livingroom', 0)
 												}}
 												type="button"
 												id="opacity2"
@@ -198,7 +225,7 @@ class Lighting extends Component {
 									<div>
 										<button
 											onClick={(e) => {
-												this.handleSubmit(e, 'quarto')
+												this.handleSubmit(e, 'quarto', 1)
 											}}
 											type="button"
 											id="btn_on_01"
@@ -209,14 +236,14 @@ class Lighting extends Component {
 									</div>
 								</div>
 								<div className="col-md-6" align="center">
-									<div id="estore_state_01">
-										<img src={store02} alt="store02" styles="height: 220px" />
+									<div id="eblind_state_01">
+										<img src={blind02} alt="blind02" styles="height: 220px" />
 									</div>
 									<div className="row">
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'store_room', 1)
+													this.handleSubmitBlind(e, 'blind_room', 1)
 												}}
 												type="button"
 												id="opacity3"
@@ -227,7 +254,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'store_room', 0)
+													this.handleSubmitBlind(e, 'blind_room', 0)
 												}}
 												type="button"
 												id="opacity4"
@@ -256,7 +283,7 @@ class Lighting extends Component {
 									<div>
 										<button
 											onClick={(e) => {
-												this.handleSubmit(e, 'cozinha')
+												this.handleSubmit(e, 'cozinha', 1)
 											}}
 											type="button"
 											id="btn_on_02"
@@ -267,14 +294,14 @@ class Lighting extends Component {
 									</div>
 								</div>
 								<div className="col-md-6" align="center">
-									<div id="estore_state_02">
-										<img src={store02} alt="store02" styles="height: 220px" />
+									<div id="eblind_state_02">
+										<img src={blind02} alt="blind02" styles="height: 220px" />
 									</div>
 									<div className="row">
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'store_kitchen', 1)
+													this.handleSubmitBlind(e, 'blind_kitchen', 1)
 												}}
 												type="button"
 												id="opacity5"
@@ -285,7 +312,7 @@ class Lighting extends Component {
 										<div className="col-md-6">
 											<button
 												onClick={(e) => {
-													this.handleSubmit(e, 'store_kitchen', 0)
+													this.handleSubmitBlind(e, 'blind_kitchen', 0)
 												}}
 												type="button"
 												id="opacity6"
