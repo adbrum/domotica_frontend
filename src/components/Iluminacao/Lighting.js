@@ -5,6 +5,7 @@ import lampadaOff from './../img/lampada-off.jpg'
 import blind02 from './../img/estore_02.jpg'
 import axios from 'axios'
 import './styles.css'
+import { Redirect } from 'react-router'
 
 class Lighting extends Component {
 	constructor(props) {
@@ -126,7 +127,18 @@ class Lighting extends Component {
 			})
 	}
 
+	state = {
+		redirect: false
+	}
+
+	handleRedirect = () => {
+		this.setState({ redirect: true })
+	}
+
 	render() {
+		if (this.state.redirect) {
+			return <Redirect to="/" />
+		}
 		return (
 			<div>
 				<div className="container-fluid" id="form_id">
@@ -135,7 +147,7 @@ class Lighting extends Component {
 							<div className="jumbotron text-right row">
 								<div className="col-md-6 text-left">
 									<h1>
-										<i className="fa fa-home" id="home">
+										<i className="fa fa-home" id="home" onClick={() => this.handleRedirect()}>
 											{' '}
 											Principal
 										</i>
